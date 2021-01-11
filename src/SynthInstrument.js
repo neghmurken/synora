@@ -14,7 +14,7 @@ const initialState = {
     attack: 0.01,
     decay: 0.2,
     sustain: 1,
-    release: 0.4,
+    release: 0.01,
   },
   waveshape: 'sawtooth',
   distortion: {
@@ -23,7 +23,7 @@ const initialState = {
   },
   pingPongDelay: {
     engine: null,
-    wet: 1,
+    wet: 0,
     delayTime: 0.2,
     feedback: 0.3,
   },
@@ -164,7 +164,6 @@ export const SynthInstrument = ({ children }) => {
     const meter = new Tone.Meter();
     const waveform = new Tone.Waveform(128);
     instrument.chain(distortion, pingPongDelay, volume, meter, waveform, Tone.Master);
-
 
     dispatch({ type: 'init_instrument', instrument: instrument });
     dispatch({ type: 'change_distortion', engine: distortion });

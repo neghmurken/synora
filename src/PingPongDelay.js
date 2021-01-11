@@ -21,19 +21,19 @@ export const PingPongDelay = () => {
       <p>Ping Pong Delay</p>
       <div>
         <div className="wet">
-          <Knob label={'Wet'} min={0} max={100} value={state.pingPongDelay.wet * 100} onChange={val => {
+          <Knob label={'WET'} min={0} max={100} value={state.pingPongDelay.wet * 100} onChange={val => {
             dispatch({ type: 'change_ping_pong_delay', wet: val / 100 })
           }} payload={Math.round(state.pingPongDelay.wet * 100) + ' %'} />
         </div>
 
         <div className="time">
-          <Knob label={'Delay'} min={0} max={100} value={state.pingPongDelay.delayTime * 10} onChange={val => {
+          <Knob label={'DLY'} min={0} max={100} value={state.pingPongDelay.delayTime * 10} onChange={val => {
             dispatch({ type: 'change_ping_pong_delay', delayTime: val / 10 })
           }} payload={state.pingPongDelay.delayTime + ' s'} />
         </div>
 
         <div className="feedback">
-          <Knob label={'Feedback'} min={0} max={100} value={state.pingPongDelay.feedback * 100} onChange={val => {
+          <Knob label={'FEED'} min={0} max={100} value={state.pingPongDelay.feedback * 100} onChange={val => {
             dispatch({ type: 'change_ping_pong_delay', feedback: val / 100 })
           }} payload={Math.round(state.pingPongDelay.feedback * 100) + ' %'} />
         </div>

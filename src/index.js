@@ -31,7 +31,11 @@ const Synth = () =>
   </Wrapper>
 
 const Wrapper = styled.div`
-  font-family: sans-serif;
+  width: 1200px;
+  font-family: Rubik, sans-serif;
+  * {
+    box-sizing: border-box;
+  }
 `
 
 const Title = styled.h1`

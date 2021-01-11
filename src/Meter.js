@@ -30,7 +30,7 @@ export const Meter = () => {
             <p>Output</p>
             <div>
               <div className="offset">
-                <Knob label={'Offset'} min={-30} max={100} value={state.meter.offset}
+                <Knob label={'OFS'} min={-30} max={100} value={state.meter.offset}
                       onChange={val => {dispatch({type:'update_meter_offset', offset: val })}}/>
                 <div className="screenHolder">
                     <progress className='indicator' max={100} value={state.meter ? state.meter.level : 0}/>

@@ -1,62 +1,141 @@
-import React from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import styled from 'styled-components'
 
-export const Knob = ({label, min, max, value, payload, onChange}) => {
+export const Knob = ({ label, min, max, value, onChange }) => {
+  const [id] = useState(Math.round(Math.random() * 100000))
+  const [active, setActive] = useState(false);
+  const [anchorX, setAnchorX] = useState(null);
+
+  const setValue = useCallback(delta => {
+    const normalizedDelta = ((max - min) / 100) * delta;
+    const newValue = Math.max(min, Math.min(max, value + normalizedDelta))
+    onChange(Math.floor(newValue));
+  }, [min, max, value, onChange])
+
+  useEffect(() => {
+    if (active) {
+      function handleOutsideMouseup () {
+        setActive(false)
+      }
+
+      document.addEventListener('mouseup', handleOutsideMouseup)
+      return () => {
+        document.removeEventListener('mouseup', handleOutsideMouseup)
+      }
+    }
+  }, [active, setActive])
+
+  useEffect(() => {
+    if (active) {
+      function handleOutsideMousemove (event) {
+        const delta = event.pageX - anchorX;
+        if (delta !== 0) {
+          setValue(delta / 2);
+        }
+        setAnchorX(event.pageX);
+      }
+
+      document.addEventListener('mousemove', handleOutsideMousemove)
+      return () => {
+        document.removeEventListener('mousemove', handleOutsideMousemove)
+      }
+    }
+  }, [active, setAnchorX, setValue, anchorX])
+
+  const click = event => {
+    setActive(true);
+    setAnchorX(event.pageX);
+  }
 
   return (
-    <div>
-      <label>{label}</label>
-      <br />
-      <KnobControl type="range" min={min} max={max} value={value} onChange={event => {
-        onChange(event.target.value)
-      }} />
-      <br />
-      {payload}
-    </div>
+    <KnobWrapper
+      active={active}
+      onMouseDown={ click }
+      rotation={ calculateRotation(value, min, max, 45) }
+    >
+      <KnobControl id={id} type="number" min={min} max={max} value={Math.round(value)} readOnly />
+      <KnobLabel id={id} data-min={min} data-max={max}>{label}</KnobLabel>
+    </KnobWrapper>
   )
 }
 
-const KnobControl = styled.input`
+const calculateRotation = (value, min, max, offset) => ((value - min) / (max - min)) * 270 - offset
+
+const KnobWrapper = styled.div`
+  color: ${props => props.active ? 'red' : 'black' };
+  width: 3.5rem;
+  height: 3.5rem;
   position: relative;
-  display: inline-block;
-  width: 60px;
-  height: 60px;
-  visibility: hidden;
-  margin-top: 0.5em;
-
+  border: 0.25rem solid ${props => props.active ? 'orange' : 'grey'};
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  margin: 0 auto 1rem;
+  user-select: none;
+  
   &:before {
-    visibility: visible;
     content: '';
     position: absolute;
-    display: block;
-    width: 100%;
-    height: 100%;
-    box-sizing: border-box;
-    border: 16px solid gray;
-    border-bottom-color: transparent;
-    border-radius: 50%;
-
+    border-right: 0.25rem solid white;
+    border-top: 0.25rem solid transparent;
+    border-bottom: 0.25rem solid transparent;
+    top: calc(50% - 0.25rem);
+    left: 0.125rem;
+    transform-origin: 1.375rem 0.25rem;
+    transform: rotate(${props => props.rotation}deg);
   }
+`
 
+const KnobLabel = styled.label`
+  display: inline-block;
+  position: absolute;
+  bottom: -2rem;
+  left: 0;
+  width: 100%;
+  font-size: 0.9rem;
+  color: white;
+  
+  &:before,
   &:after {
-    content: '';
-    visibility: visible;
     position: absolute;
-    display: block;
-    box-sizing: border-box;
-    width: 16px;
-    height: 16px;
-    background-color: orange;
-    border-radius: 50%;
-    left: 50%;
-    margin-left: -8px;
-    bottom: 0;
-    transform: rotate(${props => (props.value - props.min) / (props.max - props.min) * 270 + 45}deg);
-    transform-origin: 8px -14px;
+    font-size: 0.7rem;
+    margin-top: -1rem;
+    color: rgba(255, 255, 255, 0.8);
   }
+  
+  &:before {
+    content: attr(data-min);
+    left: -0.25rem;
+  }
+  
+  &:after {
+    content: attr(data-max);
+    right: -0.25rem;
+  }
+`
 
-  &:hover:after {
-    box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
-    border:1px solid rgba(0, 0, 0, 0.2)
+const KnobControl = styled.input`
+  appearance: none;
+  display: inline-block;
+  color: white;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  border: .4rem solid black;
+  border-radius: 50%;
+  background: transparent;
+  outline: none;
+  user-select: none;
+  pointer-events: none;
+  cursor: ew-resize;
+  
+  &::selection { 
+     background: transparent; 
+  }
+  
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
   }
 `

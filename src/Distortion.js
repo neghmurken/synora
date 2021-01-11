@@ -19,7 +19,7 @@ export const Distortion = () => {
       <p>Distortion</p>
       <div>
         <div className="amount">
-          <Knob label={'Amount'} min={0} max={100} value={state.distortion.amount * 100} onChange={val => {
+          <Knob label={'AMT'} min={0} max={100} value={state.distortion.amount * 100} onChange={val => {
             dispatch({ type: 'change_distortion', amount: val / 100 })
           }} payload={Math.round(state.distortion.amount * 100) + ' %'} />
         </div>
