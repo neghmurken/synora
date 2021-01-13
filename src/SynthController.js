@@ -24,15 +24,7 @@ export const SynthController = ({ displayControls = true }) => {
             return;
           }
 
-          const [ type, note, velocity ] = message.data
-
-          if (type === 176) {
-            if (note === 3) {
-              dispatch({ type: 'change_volume', volume: velocity / 127 })
-            }
-
-            return;
-          }
+          const [ type, note ] = message.data
 
           if (217 === type) {
             return;
@@ -66,6 +58,7 @@ export const SynthController = ({ displayControls = true }) => {
 const Info = styled.div`
   min-height: 20px;
   margin-top: 10px;
+  font-size: 0.75rem;
 
   & p {
     margin: 0;

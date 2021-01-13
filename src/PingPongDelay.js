@@ -1,41 +1,32 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext } from 'react'
+import { getParam, setParam } from './state'
 import { SynthInstrumentContext } from './SynthInstrument'
 import { Knob } from './Knob'
 import styled from 'styled-components'
 
 export const PingPongDelay = () => {
-  const [ state, dispatch ] = useContext(SynthInstrumentContext)
-
-  useEffect(() => {
-    if (!state.pingPongDelay.engine) {
-      return;
-    }
-
-    state.pingPongDelay.engine.set('wet', state.pingPongDelay.wet)
-    state.pingPongDelay.engine.set('delayTime', state.pingPongDelay.delayTime)
-    state.pingPongDelay.engine.set('feedback', state.pingPongDelay.feedback)
-  }, [state.pingPongDelay])
+  const [state, dispatch] = useContext(SynthInstrumentContext)
 
   return (
     <DelayEffect>
       <p>Ping Pong Delay</p>
       <div>
         <div className="wet">
-          <Knob label={'WET'} min={0} max={100} value={state.pingPongDelay.wet * 100} onChange={val => {
-            dispatch({ type: 'change_ping_pong_delay', wet: val / 100 })
-          }} payload={Math.round(state.pingPongDelay.wet * 100) + ' %'} />
+          <Knob label={'WET'} min={0} max={100} value={getParam(state, 'delay_wet') * 100} onChange={val => {
+            setParam(dispatch, 'delay_wet', val / 100)
+          }}/>
         </div>
 
         <div className="time">
-          <Knob label={'DLY'} min={0} max={100} value={state.pingPongDelay.delayTime * 10} onChange={val => {
-            dispatch({ type: 'change_ping_pong_delay', delayTime: val / 10 })
-          }} payload={state.pingPongDelay.delayTime + ' s'} />
+          <Knob label={'DLY'} min={0} max={100} value={getParam(state, 'delay_time') * 10} onChange={val => {
+            setParam(dispatch, 'delay_time', val / 10)
+          }}/>
         </div>
 
         <div className="feedback">
-          <Knob label={'FEED'} min={0} max={100} value={state.pingPongDelay.feedback * 100} onChange={val => {
-            dispatch({ type: 'change_ping_pong_delay', feedback: val / 100 })
-          }} payload={Math.round(state.pingPongDelay.feedback * 100) + ' %'} />
+          <Knob label={'FEED'} min={0} max={100} value={getParam(state, 'delay_feed') * 100} onChange={val => {
+            setParam(dispatch, 'delay_feed', val / 100)
+          }}/>
         </div>
       </div>
     </DelayEffect>

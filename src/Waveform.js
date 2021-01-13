@@ -10,7 +10,7 @@ export const Waveform = () => {
 
     useEffect(() => {
       const clock = new Tone.Clock(() => {
-          if (!state.waveform.engine) {
+          if (!state.engine.initialized) {
             return null;
           }
 
