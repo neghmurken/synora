@@ -1,4 +1,4 @@
-import Tone from 'tone'
+import * as Tone from 'tone'
 import styled from 'styled-components'
 import React, { createContext, useReducer, useEffect } from 'react'
 import { propEq, map, filter, both } from 'ramda'
@@ -23,8 +23,8 @@ export const Engine = ({ children }) => {
     )
     const volume = new Tone.Volume(params.master_vol)
 
-    distortion.set('oversampling', '4x')
-    delay.set('wet', params.delay_wet)
+    distortion.set({ 'oversampling': '4x' })
+    delay.set({ 'wet': params.delay_wet })
 
     const waveform = new Tone.Waveform(128)
     oscillator.chain(distortion, delay, volume, waveform, Tone.Master)
@@ -59,7 +59,7 @@ export const Engine = ({ children }) => {
     }
 
     const decibels = Tone.gainToDb(params.master_vol)
-    engine.volume.set('volume', decibels)
+    engine.volume.set({ 'volume': decibels })
   }, [params.master_vol, engine])
 
   useEffect(() => {
@@ -90,7 +90,7 @@ export const Engine = ({ children }) => {
       return
     }
 
-    engine.distortion.set('distortion', params.dist_amt)
+    engine.distortion.set({ 'distortion': params.dist_amt })
   }, [params.dist_amt, engine])
 
   useEffect(() => {
@@ -98,9 +98,9 @@ export const Engine = ({ children }) => {
       return
     }
 
-    engine.delay.set('wet', params.delay_wet)
-    engine.delay.set('delayTime', params.delay_time)
-    engine.delay.set('feedback', params.delay_feed)
+    engine.delay.set({ 'wet': params.delay_wet }) 
+    engine.delay.set({ 'delayTime': params.delay_time })
+    engine.delay.set({ 'feedback': params.delay_feed })
   }, [params.delay_wet, params.delay_time, params.delay_feed, engine])
 
   return (
