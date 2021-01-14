@@ -41,7 +41,7 @@ export const SynthController = ({ displayControls = true }) => {
       })
     })
     .catch(console.error)
-  }, [])
+  }, [dispatch])
 
   return !displayControls
     ? null

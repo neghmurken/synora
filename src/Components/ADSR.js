@@ -1,39 +1,24 @@
-import React, { useContext } from 'react'
-import { getParam, setParam } from '../state'
-import { SynthInstrumentContext } from './Engine'
-import { Knob } from './ui/Knob'
+import React from 'react'
+import { ParamKnob } from './ParamKnob'
 import styled from 'styled-components'
 
-export const ADSR = () => {
-  const [state, dispatch] = useContext(SynthInstrumentContext)
-
+export const ADSR = ({oscillatorNumber}) => {
   return (
     <ADSRRack>
-      <p>Envelope</p>
-      <div>
-        <div className="attack">
-          <Knob label={'ATK'} min={0} max={1000} value={getParam(state, 'osc_env_atk') * 1000} onChange={val => {
-            setParam(dispatch, 'osc_env_atk', val / 1000)
-          }}/>
-        </div>
+      <div className="attack">
+        <ParamKnob paramName={`osc${oscillatorNumber}_env_atk`} label="ATK" min="0" max="1000" factor="1000" step="1"/>
+      </div>
 
-        <div className="decay">
-          <Knob label={'DEC'} min={0} max={1000} value={getParam(state, 'osc_env_dec') * 1000} onChange={val => {
-            setParam(dispatch, 'osc_env_dec', val / 1000)
-          }}/>
-        </div>
+      <div className="decay">
+        <ParamKnob paramName={`osc${oscillatorNumber}_env_dec`} label="DEC" min="0" max="1000" factor="1000" step="1"/>
+      </div>
 
-        <div className="sustain">
-          <Knob label={'SUS'} min={0} max={100} value={getParam(state, 'osc_env_sus') * 100} onChange={val => {
-            setParam(dispatch, 'osc_env_sus', val / 100)
-          }}/>
-        </div>
+      <div className="sustain">
+        <ParamKnob paramName={`osc${oscillatorNumber}_env_sus`} label="SUS" min="0" max="100" factor="100"/>
+      </div>
 
-        <div className="Release">
-          <Knob label={'REL'} min={1} max={4000} value={getParam(state, 'osc_env_rel') * 1000} onChange={val => {
-            setParam(dispatch, 'osc_env_rel', val / 1000)
-          }}/>
-        </div>
+      <div className="release">
+        <ParamKnob paramName={`osc${oscillatorNumber}_env_rel`} label="REL" min="0" max="1000" factor="1000" step="1"/>
       </div>
     </ADSRRack>
   )
@@ -42,13 +27,9 @@ export const ADSR = () => {
 const ADSRRack = styled.div`
   flex: 4!important;
   margin-bottom: 1em;
+  display: flex;
 
   > div {
-    display: flex;
-  }
-
-  div > div {
     flex: 1;
-    text-align: center;
   }
 `

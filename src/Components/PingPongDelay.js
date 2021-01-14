@@ -34,7 +34,7 @@ export const PingPongDelay = () => {
 }
 
 const DelayEffect = styled.div`
-  flex: 4!important;
+  flex: 3!important;
 
   > div {
     display: flex;

@@ -2,27 +2,39 @@ import { append, assoc, compose, find, ifElse, map, propEq, when } from 'ramda'
 
 export const initialState = {
   notes: [],
+  initialized: false,
   engine: {
-    initialized: false,
-    oscillator: null,
+    oscillator1: null,
+    oscillator2: null,
     volume: null,
     distortion: null,
     delay: null,
-    waveform: null,
+    analyzer: null,
   },
   parameters: {
-    osc_type: 'sawtooth',
-    osc_env_atk: 0.01,
-    osc_env_dec: 0.2,
-    osc_env_sus: 1,
-    osc_env_rel: 0.01,
     master_vol: 0.7,
+
+    osc1_type: 'sawtooth',
+    osc1_vol: 1,
+    osc1_env_atk: 0.01,
+    osc1_env_dec: 0.2,
+    osc1_env_sus: 1,
+    osc1_env_rel: 0.01,
+
+    osc2_type: 'sine',
+    osc2_vol: 1,
+    osc2_env_atk: 0.01,
+    osc2_env_dec: 0.2,
+    osc2_env_sus: 1,
+    osc2_env_rel: 0.01,
+
     dist_amt: 0,
+
     delay_wet: 0,
     delay_time: 0.2,
     delay_feed: 0.3,
   },
-  waveform: {
+  analyzer: {
     values: [],
   }
 }
@@ -34,10 +46,10 @@ export const reducer = (state = initialState, action) => {
 
   switch (action.type) {
     case 'init_engine':
-      return { ...state, engine: { ...action.engine, initialized: true } }
+      return { ...state, engine: action.engine, initialized: true }
 
-    case 'update_waveform':
-      return { ...state, waveform: { ...state.waveform, values: state.engine.waveform.getValue() } }
+    case 'update_analyzer':
+      return { ...state, analyzer: { values: state.engine.analyzer.getValue() } }
 
     case 'note_pressed':
       return {
