@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
-import { getParam, setParam } from './state'
-import { SynthInstrumentContext } from './SynthInstrument'
-import { Knob } from './Knob'
+import { getParam, setParam } from '../state'
+import { SynthInstrumentContext } from './Engine'
+import { Knob } from './ui/Knob'
 import styled from 'styled-components'
 
 export const Distortion = () => {

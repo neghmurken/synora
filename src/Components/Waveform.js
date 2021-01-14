@@ -1,6 +1,6 @@
 import React, {useContext, useEffect} from 'react'
 import Tone from 'tone'
-import {SynthInstrumentContext} from "./SynthInstrument";
+import {SynthInstrumentContext} from "./Engine";
 import styled from "styled-components";
 
 export const Waveform = () => {

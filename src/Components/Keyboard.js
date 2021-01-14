@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react'
 import { range, map, find } from 'ramda'
 import Tone from 'tone'
-import { SynthInstrumentContext } from './SynthInstrument'
+import { SynthInstrumentContext } from './Engine'
 import styled from 'styled-components'
 
 export const Keyboard = () => {

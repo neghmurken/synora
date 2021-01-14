@@ -1,7 +1,7 @@
 import Tone from 'tone'
 import React, { useContext, useEffect } from 'react'
 import { map } from 'ramda'
-import { SynthInstrumentContext } from './SynthInstrument'
+import { SynthInstrumentContext } from './Engine'
 import styled from 'styled-components'
 
 export const SynthController = ({ displayControls = true }) => {

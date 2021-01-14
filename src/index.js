@@ -1,20 +1,20 @@
 import React from 'react'
 import { render } from 'react-dom'
-import { SynthInstrument } from './SynthInstrument'
-import { SynthController } from './SynthController'
-import { Volume } from './Volume'
-import { ADSR } from './ADSR'
-import { Keyboard } from './Keyboard'
-import { WaveshapeSelector} from './WaveshapeSelector'
-import { PingPongDelay } from './PingPongDelay'
-import { Distortion } from './Distortion'
-import { Waveform } from './Waveform'
+import { Engine } from './Components/Engine'
+import { SynthController } from './Components/SynthController'
+import { Volume } from './Components/Volume'
+import { ADSR } from './Components/ADSR'
+import { Keyboard } from './Components/Keyboard'
+import { WaveshapeSelector} from './Components/WaveshapeSelector'
+import { PingPongDelay } from './Components/PingPongDelay'
+import { Distortion } from './Components/Distortion'
+import { Waveform } from './Components/Waveform'
 import styled from 'styled-components'
 
 const Synth = () =>
-  <Wrapper>
-    <SynthInstrument>
-      <Title>Syñora</Title>
+  <Instrument>
+    <Engine>
+      <Title>|| Syñora</Title>
       <Volume />
       <WaveshapeSelector />
       <EffectRack>
@@ -25,10 +25,11 @@ const Synth = () =>
       </EffectRack>
       <Keyboard />
       <SynthController />
-    </SynthInstrument>
-  </Wrapper>
+    </Engine>
+  </Instrument>
 
-const Wrapper = styled.div`
+const Instrument = styled.div`
+  position: relative;
   width: 1200px;
   font-family: Rubik, sans-serif;
   * {

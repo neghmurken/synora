@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
-import { getParam, setParam } from './state'
-import { SynthInstrumentContext } from './SynthInstrument'
+import { getParam, setParam } from '../state'
+import { SynthInstrumentContext } from './Engine'
 import styled from 'styled-components'
 
 export const Volume = () => {

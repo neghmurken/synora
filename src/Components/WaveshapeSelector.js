@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { map } from 'ramda'
-import { getParam, setParam } from './state'
-import { SynthInstrumentContext } from './SynthInstrument'
+import { getParam, setParam } from '../state'
+import { SynthInstrumentContext } from './Engine'
 
 export const WaveshapeSelector = () => {
   const [state, dispatch] = useContext(SynthInstrumentContext)

@@ -2,11 +2,11 @@ import Tone from 'tone'
 import styled from 'styled-components'
 import React, { createContext, useReducer, useEffect } from 'react'
 import { propEq, map, filter, both } from 'ramda'
-import { getParams, initialState, reducer } from './state'
+import { getParams, initialState, reducer } from '../state'
 
 export const SynthInstrumentContext = createContext([initialState, () => null])
 
-export const SynthInstrument = ({ children }) => {
+export const Engine = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState)
   const { engine } = state
   const params = getParams(state)
