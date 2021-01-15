@@ -69,7 +69,7 @@ export const Engine = ({ children }) => {
 
     const decibels = Tone.gainToDb(params.master_vol)
     engine.volume.set({ 'volume': decibels })
-  }, [params.master_vol, engine, init])
+  }, [params.master_vol, engine, initialized])
 
   useEffect(() => {
     if (!initialized) {
@@ -113,6 +113,15 @@ export const Engine = ({ children }) => {
     engine.oscillator1.set({ 'oscillator': { 'type': params.osc1_type } })
     engine.oscillator2.set({ 'oscillator': { 'type': params.osc2_type } })
   }, [params.osc1_type, params.osc2_type, engine, initialized])
+
+  useEffect(() => {
+    if (!initialized) {
+      return
+    }
+
+    engine.oscillator1.set({ 'oscillator': { 'detune': params.osc1_detune } })
+    engine.oscillator2.set({ 'oscillator': { 'detune': params.osc2_detune } })
+  }, [params.osc1_detune, params.osc2_detune, engine, initialized])
 
   useEffect(() => {
     if (!initialized) {

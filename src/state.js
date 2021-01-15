@@ -15,6 +15,7 @@ export const initialState = {
     master_vol: 0.7,
 
     osc1_type: 'sawtooth',
+    osc1_detune: 0,
     osc1_vol: 1,
     osc1_env_atk: 0.01,
     osc1_env_dec: 0.2,
@@ -22,6 +23,7 @@ export const initialState = {
     osc1_env_rel: 0.01,
 
     osc2_type: 'sine',
+    osc2_detune: 0,
     osc2_vol: 1,
     osc2_env_atk: 0.01,
     osc2_env_dec: 0.2,
