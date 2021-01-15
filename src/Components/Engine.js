@@ -1,7 +1,7 @@
 import * as Tone from 'tone'
 import styled from 'styled-components'
 import React, { createContext, useReducer, useEffect } from 'react'
-import { propEq, map, filter, both, init } from 'ramda'
+import { propEq, map, filter, both } from 'ramda'
 import { getParams, initialState, reducer } from '../state'
 
 export const SynthInstrumentContext = createContext([initialState, () => null])

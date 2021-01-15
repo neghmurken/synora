@@ -4,9 +4,9 @@ A web based synthesizer using Web Audio API and Web MIDI API, using Tone.js and 
 
 ## Routing
 
-           /---> OSC1 ---\     /---> FLT1 ---\
-Midi ---> |               |---|               |---> DIST ---> DELAY ---> OUT
-           \---> OSC2 ---/     \---> FLT2 ---/
+           /---> OSC1 ---\
+Midi ---> |               |---> FILTER ---> DIST ---> DELAY ---> OUT
+           \---> OSC2 ---/
 
 ## How to use
 
@@ -18,7 +18,8 @@ $ yarn start
 ## TODO
 
  - Detune and pitch
- - Waveshap knob
+ - Waveshape knob
+ - Global theme
  - Filter (type, cut, res, and ADSR)
  - Reverb
  - Handle velocity (MIDI and keyboard position)
