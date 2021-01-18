@@ -26,7 +26,6 @@ export const ADSR = ({oscillatorNumber}) => {
 
 const ADSRRack = styled.div`
   flex: 4!important;
-  margin-bottom: 1em;
   display: flex;
 
   > div {

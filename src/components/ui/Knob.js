@@ -50,11 +50,15 @@ export const Knob = ({ label, min, max, value, onChange, step = null }) => {
     setAnchorX(event.pageX)
   }
 
+  const rotation = calculateRotation(value, min, max)
+
   return (
     <KnobWrapper
       active={active}
       onMouseDown={click}
-      rotation={calculateRotation(value, min, max, 45)}
+      cursorRotation={rotation}
+      clipPolygonPoints={createClipPolygon(rotation)}
+      withLabel={!!label}
     >
       <KnobControl id={id} type="number" min={min} max={max} value={Math.round(value)} readOnly/>
       {label && <KnobLabel id={id} data-min={min} data-max={max}>{label}</KnobLabel>}
@@ -62,31 +66,67 @@ export const Knob = ({ label, min, max, value, onChange, step = null }) => {
   )
 }
 
-const calculateRotation = (value, min, max, offset) => ((value - min) / (max - min)) * 270 - offset
+const calculateRotation = (value, min, max) => ((value - min) / (max - min)) * 270
+
+const createClipPolygon = angle => {
+  let points = [
+    '50% 50%',
+    '0% 100%',
+  ];
+
+  if (angle <= 90) {
+    points.push(`0% ${(90 - angle) / 9 * 10}%`);
+  } else {
+    points.push('0% 0%');
+
+    if (angle <= 180) {
+      points.push(`${(angle - 90) / 9 * 10}% 0%`);
+    } else {
+      points.push('100% 0%');
+
+      points.push(`100% ${(angle - 180) / 9 * 10}%`);
+    }
+  }
+  return points.join(', ')
+}
 
 const KnobWrapper = styled.div`
-  color: ${props => props.active ? 'red' : 'black'};
   width: 3.5rem;
   max-width: 3.5rem;
   height: 3.5rem;
   position: relative;
-  border: 0.25rem solid ${props => props.active ? 'orange' : 'grey'};
+  border: 0.25rem solid ${props => props.theme.colors.grey};
   border-bottom-color: transparent;
   border-radius: 50%;
-  margin: 0 auto ${props => props.label ? '1rem' : '0'};
+  margin: 0 auto ${props => props.withLabel ? '2rem' : '0'};
   user-select: none;
   text-align: center;
+  cursor: ew-resize;
+  box-shadow: 0 -2px 0 ${props => props.theme.colors.shadows.lightBlack};
+
+  &:after {
+    content: '';
+    position: absolute;
+    left: -0.25rem;
+    right: -0.25rem;
+    top: -0.25rem;
+    bottom: -0.25rem;
+    z-index: 1;
+    border-radius: 50%;
+    border: 0.25rem solid ${props => props.theme.colors.accent3};
+    clip-path: polygon(${props => props.clipPolygonPoints});
+  }
 
   &:before {
     content: '';
     position: absolute;
-    border-right: 0.25rem solid white;
-    border-top: 0.25rem solid transparent;
-    border-bottom: 0.25rem solid transparent;
-    top: calc(50% - 0.25rem);
+    border-right: 0.3rem solid ${props => props.active ? props.theme.colors.accent3 : props.theme.colors.grey};
+    border-top: 0.3rem solid transparent;
+    border-bottom: 0.3rem solid transparent;
+    top: calc(50% - 0.3rem);
     left: 0.125rem;
-    transform-origin: 1.375rem 0.25rem;
-    transform: rotate(${props => props.rotation}deg);
+    transform-origin: 1.375rem 0.3rem;
+    transform: rotate(${props => props.cursorRotation - 45}deg);
   }
 `
 
@@ -96,8 +136,9 @@ const KnobLabel = styled.label`
   bottom: -2rem;
   left: 0;
   width: 100%;
-  font-size: 0.9rem;
-  color: white;
+  font-size: 0.8rem;
+  color: ${props => props.theme.colors.text};
+  text-shadow: 0 -1px 0 ${props => props.theme.colors.shadows.text};
 
   &:before,
   &:after {
@@ -105,7 +146,8 @@ const KnobLabel = styled.label`
     position: absolute;
     font-size: 0.7rem;
     margin-top: -1rem;
-    color: rgba(255, 255, 255, 0.8);
+    color: ${props => props.theme.colors.text};
+    opacity: 0.75;
   }
 
   &:before {
@@ -121,8 +163,9 @@ const KnobLabel = styled.label`
 
 const KnobControl = styled.input`
   appearance: none;
+  z-index: 2;
   display: inline-block;
-  color: white;
+  color: ${props => props.theme.colors.text};
   padding: 0;
   width: 100%;
   height: 100%;
@@ -133,7 +176,11 @@ const KnobControl = styled.input`
   outline: none;
   user-select: none;
   pointer-events: none;
-  cursor: ew-resize;
+  box-shadow: inset 0 2px 2px ${props => props.theme.colors.shadows.lightWhite}, inset 0 -2px 2px ${props => props.theme.colors.shadows.lightBlack};
+
+  ${KnobWrapper}:hover & {
+    background-color: ${props => props.theme.colors.shadows.lightWhite};
+  }
 
   &::selection {
      background: transparent;

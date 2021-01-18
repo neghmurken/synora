@@ -5,14 +5,14 @@ import { SynthInstrumentContext } from './Engine'
 import styled from 'styled-components'
 
 export const Keyboard = () => {
-  const [ state, dispatch ] = useContext(SynthInstrumentContext);
-  const [ active, setActive ] = useState(false);
+  const [state, dispatch] = useContext(SynthInstrumentContext)
+  const [active, setActive] = useState(false)
 
   const isKeyActive = (notes, key) => {
-    const note = find(({note}) => note === key, notes);
+    const note = find(({ note }) => note === key, notes)
 
-    return note && note.isPlaying;
-  };
+    return note && note.isPlaying
+  }
 
   const keyPress = key => dispatch({ type: 'note_pressed', note: key })
 
@@ -23,21 +23,27 @@ export const Keyboard = () => {
       key={key}
       sharp={Tone.Midi(key).toNote().includes('#')}
       active={isKeyActive(state.notes, key)}
-      onMouseDown={ () => { setActive(true); keyPress(key) } }
-      onMouseUp={ () => { setActive(false); keyRelease(key) } }
-      onMouseEnter={ () => active && keyPress(key) }
-      onMouseLeave={ () => active && keyRelease(key) }>
-      { isKeyActive(state.notes, key) && Tone.Midi(key).toNote()}
+      onMouseDown={() => {
+        setActive(true)
+        keyPress(key)
+      }}
+      onMouseUp={() => {
+        setActive(false)
+        keyRelease(key)
+      }}
+      onMouseEnter={() => active && keyPress(key)}
+      onMouseLeave={() => active && keyRelease(key)}>
+      {isKeyActive(state.notes, key) && Tone.Midi(key).toNote()}
     </Key>,
     range(36, 89)
-  );
+  )
 
   return (
-    <Board onMouseLeave={ () => setActive(false) }>
+    <Board onMouseLeave={() => setActive(false)}>
       {keys}
     </Board>
   )
-};
+}
 
 const Board = styled.div`
   display: flex;
@@ -46,10 +52,10 @@ const Board = styled.div`
 
 const Key = styled.button`
   display: block;
-  border: 1px solid grey;
+  border: 1px solid ${props => props.theme.colors.grey};
   border-right: none;
-  background-color: ${props => props.active ? 'orange' : props.sharp ? 'black' : 'white'};
-  color: #333;
+  background-color: ${props => props.active ? props.theme.colors.accent2 : props.sharp ? props.theme.colors.keys.black : props.theme.colors.keys.white};
+  color: white;
   margin-left: ${props => props.sharp ? '-1.6%' : 0};
   margin-right: ${props => props.sharp ? '-1.6%' : 0};
   z-index: ${props => props.sharp ? '1' : 0}

@@ -12,29 +12,33 @@ export const initialState = {
     analyzer: null,
   },
   parameters: {
-    master_vol: 0.7,
+    master_vol: 0.7, // [0;1] gain
 
-    osc1_type: 'sawtooth',
-    osc1_detune: 0,
-    osc1_vol: 1,
-    osc1_env_atk: 0.01,
-    osc1_env_dec: 0.2,
-    osc1_env_sus: 1,
-    osc1_env_rel: 0.01,
+    osc1_type: 'sawtooth', // {sine,square,triangle,sawtooth}
+    osc1_vol: 1, // [0;1] gain
+    osc1_phase: 0, // [0;360] degress
+    osc1_pitch: 0, // [-24;24] semitones
+    osc1_detune: 0, // [-100;100] cents
+    osc1_env_atk: 0.01, // [0;1] sec
+    osc1_env_dec: 0.2, // [0;1] sec
+    osc1_env_sus: 1, // [0;1] unitless
+    osc1_env_rel: 0.01, // [0;1] sec
 
-    osc2_type: 'sine',
-    osc2_detune: 0,
-    osc2_vol: 1,
-    osc2_env_atk: 0.01,
-    osc2_env_dec: 0.2,
-    osc2_env_sus: 1,
-    osc2_env_rel: 0.01,
+    osc2_type: 'sine', // {sine,square,triangle,sawtooth}
+    osc2_vol: 1, // [0;1] gain
+    osc2_phase: 0, // [0;360] degress
+    osc2_pitch: 0, // [-24;24] semitones
+    osc2_detune: 0, // [-100;100] cents
+    osc2_env_atk: 0.01, // [0;1] sec
+    osc2_env_dec: 0.2, // [0;1] sec
+    osc2_env_sus: 1, // [0;1] unitless
+    osc2_env_rel: 0.01, // [0;1] sec
 
-    dist_amt: 0,
+    dist_amt: 0, // [0;1] unitless
 
-    delay_wet: 0,
-    delay_time: 0.2,
-    delay_feed: 0.3,
+    delay_wet: 0, // [0;1] unitless
+    delay_time: 0.2, // [O;10] sec
+    delay_feed: 0.3, // [O;1] unitless
   },
   analyzer: {
     values: [],
@@ -92,12 +96,15 @@ export const reducer = (state = initialState, action) => {
           [action.name]: action.value,
         }
       }
+
     default:
       return state
   }
 }
 
+/* Selectors */
 export const getParams = state => state.parameters
 export const getParam = (state, name) => getParams(state)[name] || null
 
+/* Dispatch helpers */
 export const setParam = (dispatch, name, value) => dispatch({ type: 'set_parameter', name, value })

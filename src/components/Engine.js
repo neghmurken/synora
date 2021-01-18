@@ -119,9 +119,27 @@ export const Engine = ({ children }) => {
       return
     }
 
-    engine.oscillator1.set({ 'oscillator': { 'detune': params.osc1_detune } })
-    engine.oscillator2.set({ 'oscillator': { 'detune': params.osc2_detune } })
-  }, [params.osc1_detune, params.osc2_detune, engine, initialized])
+    engine.oscillator1.set({ 'oscillator': { 'detune': params.osc1_detune + params.osc1_pitch * 100 } })
+    engine.oscillator2.set({ 'oscillator': { 'detune': params.osc2_detune + params.osc2_pitch * 100 } })
+  }, [params.osc1_detune, params.osc1_pitch, params.osc2_detune, params.osc2_pitch, engine, initialized])
+
+  useEffect(() => {
+    if (!initialized) {
+      return
+    }
+
+    engine.oscillator1.set({ 'oscillator': { 'volume': Tone.gainToDb(params.osc1_vol) } })
+    engine.oscillator2.set({ 'oscillator': { 'volume': Tone.gainToDb(params.osc2_vol) } })
+  }, [params.osc1_vol, params.osc2_vol, engine, initialized])
+
+  useEffect(() => {
+    if (!initialized) {
+      return
+    }
+
+    engine.oscillator1.set({ 'oscillator': { 'phase': params.osc1_phase } })
+    engine.oscillator2.set({ 'oscillator': { 'phase': params.osc2_phase } })
+  }, [params.osc1_phase, params.osc2_phase, engine, initialized])
 
   useEffect(() => {
     if (!initialized) {
@@ -154,8 +172,8 @@ const Rack = styled.div`
   overflow: hidden;
   border: 1px solid black;
   padding: 1em;
-  background-color: #234760;
-  color: #eee;
+  background-color: ${props => props.theme.colors.background};
+  color: ${props => props.theme.colors.text};
   box-shadow: inset 0 0 140px rgba(0, 0, 0, 0.2), 0 0 8px rgba(0, 0, 0, 0.2);
   border-radius: 4px;
 `

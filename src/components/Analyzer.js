@@ -1,9 +1,11 @@
 import React, { useContext, useEffect } from 'react'
 import * as Tone from 'tone'
+import { mergeColors } from '../utils/colors'
 import { SynthInstrumentContext } from './Engine'
 import styled from 'styled-components'
+import theme from '../theme'
 
-export const Analyzer = () => {
+export const Analyzer = (props) => {
   const [state, dispatch] = useContext(SynthInstrumentContext)
 
   const screen = React.useRef(null)
@@ -39,7 +41,7 @@ export const Analyzer = () => {
 
     ctx.fillRect(0, 0, screen.current.width, screen.current.height)
     for (let i = 0; i <= dots.length; i++) {
-      ctx.strokeStyle = `#47${i.toString(16).padStart(2, '0')}ff`
+      ctx.strokeStyle = mergeColors(theme.colors.accent2, theme.colors.accent3, i / dots.length)
       ctx.beginPath()
       ctx.moveTo(i2w(i), halfHeight - a2h(dots[i]))
       ctx.lineTo(i2w(i), halfHeight + a2h(dots[i]))

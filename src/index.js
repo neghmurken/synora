@@ -1,38 +1,41 @@
 import React from 'react'
 import { render } from 'react-dom'
-import { Engine } from './Components/Engine'
-import { Oscillator } from './Components/Oscillator'
-import { ParamKnob } from './Components/ParamKnob'
-import { SynthController } from './Components/SynthController'
-import { Keyboard } from './Components/Keyboard'
-import { PingPongDelay } from './Components/PingPongDelay'
-import { Distortion } from './Components/Distortion'
-import { Analyzer } from './Components/Analyzer'
-import styled from 'styled-components'
+import { Engine } from './components/Engine'
+import { Oscillator } from './components/Oscillator'
+import { ParamKnob } from './components/ParamKnob'
+import { SynthController } from './components/SynthController'
+import { Keyboard } from './components/Keyboard'
+import { PingPongDelay } from './components/PingPongDelay'
+import { Distortion } from './components/Distortion'
+import { Analyzer } from './components/Analyzer'
+import styled, { ThemeProvider } from 'styled-components'
+import theme from './theme'
 
 const Synth = () =>
-  <Instrument>
-    <Engine>
-      <Header>
-        <Title>|| Syñora</Title>
-        <Analyzer />
-        <ParamKnob paramName={'master_vol'} factor="100" min="0" max="100" />
-      </Header>
-      <Rack>
-        <Oscillator number="1" />
-        <Oscillator number="2" />
-        <PingPongDelay />
-        <Distortion />
-      </Rack>
-      <Keyboard />
-      <SynthController />
-    </Engine>
-  </Instrument>
+  <ThemeProvider theme={ theme }>
+    <Instrument>
+      <Engine>
+        <Header>
+          <Title>|| Syñora</Title>
+          <Analyzer />
+          <ParamKnob paramName={'master_vol'} factor="100" min="0" max="100" />
+        </Header>
+        <Rack>
+          <Oscillator number="1" />
+          <Oscillator number="2" />
+          <PingPongDelay />
+          <Distortion />
+        </Rack>
+        <Keyboard />
+        <SynthController />
+      </Engine>
+    </Instrument>
+  </ThemeProvider>
 
 const Instrument = styled.div`
   position: relative;
   width: 1200px;
-  font-family: Rubik, sans-serif;
+  font-family: ${props => props.theme.fontFamily};
   margin: 0 auto;
   user-select: none;
 
@@ -44,8 +47,8 @@ const Instrument = styled.div`
 const Header = styled.header`
   margin: -1rem -1rem 2rem -1rem;
   padding: 1rem;
-  background-color: #122e3e;
-  box-shadow: 0 8px 8px rgba(0, 0, 0, 0.5), inset 0 8px 16px rgba(255, 255, 255, 0.1);
+  background-color: ${props => props.theme.colors.header};
+  box-shadow: 0 8px 8px ${props => props.theme.colors.shadows.lightBlack}, inset 0 8px 16px ${props => props.theme.colors.shadows.lightWhite};
   display: flex;
   justify-content: space-between;
 
@@ -57,7 +60,7 @@ const Header = styled.header`
 const Title = styled.h1`
   flex: 1;
   margin: auto 0;
-  text-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+  text-shadow: 0 0 4px ${props => props.theme.colors.shadows.text}, inset 0 0 4px red;
   text-transform: uppercase;
   font-style: italic;
   font-weight: bold;
@@ -69,18 +72,20 @@ const Rack = styled.div`
   > * {
     flex: 1;
     clear: both;
-    border: 1px solid rgba(0, 0, 0, 0.5);
-    padding: 1rem 1rem 1.5rem;
+    border: 1px solid ${props => props.theme.colors.borders.dark};
+    padding: 1rem;
     margin-bottom: 1rem;
-    box-shadow: inset 0 -40px 40px rgba(255, 255, 255, 0.05);
+    box-shadow: inset 0 -40px 40px ${props => props.theme.colors.shadows.lightWhite};
 
     p {
       margin: -24px 0 1em 0;
-      padding-left: 1em;
-      background-color: #234760;
+      text-transform: uppercase;
+      text-shadow: 0 -1px 0 ${props => props.theme.colors.shadows.text};
+      font-size: 0.9rem;
+      font-weight: bold;
     }
 
-    &>div {
+    > div {
       display: flex;
     }
   }
