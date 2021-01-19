@@ -14,13 +14,12 @@ export const Oscillator = ({ number }) => {
       <ParamKnob paramName={`osc${number}_phase`} label="PHASE" min="0" max="360"/>
       <ParamKnob paramName={`osc${number}_vol`} label="VOL" min="0" max="100" factor="100"/>
     </div>
-    <ADSR oscillatorNumber={number}/>
+    <ADSR paramPrefix={`osc${number}`}/>
   </Wrapper>
 }
 
 const Wrapper = styled.div`
   position: relative;
-  flex: 4!important;
   display: flex;
   flex-direction: column;
 

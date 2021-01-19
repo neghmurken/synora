@@ -54,11 +54,11 @@ const Key = styled.button`
   display: block;
   border: 1px solid ${props => props.theme.colors.grey};
   border-right: none;
-  background-color: ${props => props.active ? props.theme.colors.accent2 : props.sharp ? props.theme.colors.keys.black : props.theme.colors.keys.white};
+  background-color: ${props => props.active ? props.theme.colors.accent1 : props.sharp ? props.theme.colors.keys.black : props.theme.colors.keys.white};
   color: white;
   margin-left: ${props => props.sharp ? '-1.6%' : 0};
   margin-right: ${props => props.sharp ? '-1.6%' : 0};
-  z-index: ${props => props.sharp ? '1' : 0}
+  z-index: ${props => props.sharp ? '1' : 0};
   flex: ${props => props.sharp ? '0.8' : '1'};
   min-width: 1%;
   height: ${props => props.sharp ? '60px' : '110px'};

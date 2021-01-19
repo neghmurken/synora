@@ -1,33 +1,37 @@
 import React from 'react'
 import { render } from 'react-dom'
 import { Engine } from './components/Engine'
+import { Filter } from './components/Filter'
 import { Oscillator } from './components/Oscillator'
 import { ParamKnob } from './components/ParamKnob'
 import { SynthController } from './components/SynthController'
 import { Keyboard } from './components/Keyboard'
-import { PingPongDelay } from './components/PingPongDelay'
+import { Delay } from './components/Delay'
 import { Distortion } from './components/Distortion'
 import { Analyzer } from './components/Analyzer'
 import styled, { ThemeProvider } from 'styled-components'
 import theme from './theme'
 
 const Synth = () =>
-  <ThemeProvider theme={ theme }>
+  <ThemeProvider theme={theme}>
     <Instrument>
       <Engine>
         <Header>
           <Title>|| Syñora</Title>
-          <Analyzer />
-          <ParamKnob paramName={'master_vol'} factor="100" min="0" max="100" />
+          <Analyzer/>
+          <ParamKnob paramName={'master_vol'} factor="100" min="0" max="100"/>
         </Header>
         <Rack>
-          <Oscillator number="1" />
-          <Oscillator number="2" />
-          <PingPongDelay />
-          <Distortion />
+          <Oscillator number="1"/>
+          <Oscillator number="2"/>
+          <Filter/>
         </Rack>
-        <Keyboard />
-        <SynthController />
+        <Rack>
+          <Delay/>
+          <Distortion/>
+        </Rack>
+        <Keyboard/>
+        <SynthController/>
       </Engine>
     </Instrument>
   </ThemeProvider>
@@ -93,4 +97,4 @@ const Rack = styled.div`
 
 const root = document.getElementById('root')
 
-render(<Synth />, root)
+render(<Synth/>, root)

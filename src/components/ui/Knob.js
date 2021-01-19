@@ -50,14 +50,14 @@ export const Knob = ({ label, min, max, value, onChange, step = null }) => {
     setAnchorX(event.pageX)
   }
 
-  const rotation = calculateRotation(value, min, max)
+  const angle = calculateAngle(value, min, max)
 
   return (
     <KnobWrapper
       active={active}
       onMouseDown={click}
-      cursorRotation={rotation}
-      clipPolygonPoints={createClipPolygon(rotation)}
+      cursorRotation={angle}
+      maskPolygonPoints={angleToMaskPolygonPoints(angle)}
       withLabel={!!label}
     >
       <KnobControl id={id} type="number" min={min} max={max} value={Math.round(value)} readOnly/>
@@ -66,9 +66,9 @@ export const Knob = ({ label, min, max, value, onChange, step = null }) => {
   )
 }
 
-const calculateRotation = (value, min, max) => ((value - min) / (max - min)) * 270
+const calculateAngle = (value, min, max) => ((value - min) / (max - min)) * 270
 
-const createClipPolygon = angle => {
+const angleToMaskPolygonPoints = angle => {
   let points = [
     '50% 50%',
     '0% 100%',
@@ -114,13 +114,13 @@ const KnobWrapper = styled.div`
     z-index: 1;
     border-radius: 50%;
     border: 0.25rem solid ${props => props.theme.colors.accent3};
-    clip-path: polygon(${props => props.clipPolygonPoints});
+    clip-path: polygon(${props => props.maskPolygonPoints});
   }
 
   &:before {
     content: '';
     position: absolute;
-    border-right: 0.3rem solid ${props => props.active ? props.theme.colors.accent3 : props.theme.colors.grey};
+    border-right: 0.3rem solid ${props => props.active ? props.theme.colors.accent1 : props.theme.colors.grey};
     border-top: 0.3rem solid transparent;
     border-bottom: 0.3rem solid transparent;
     top: calc(50% - 0.3rem);

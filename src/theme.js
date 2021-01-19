@@ -3,8 +3,8 @@ export default {
 
   colors: {
     accent1: '#ea7005',
-    accent2: '#4700ff',
-    accent3: '#47ffff',
+    accent2: '#4d1ac4',
+    accent3: '#15eeff',
 
     white: '#dae5ff',
     grey: '#5f636b',

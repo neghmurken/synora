@@ -12,31 +12,44 @@ export const Engine = ({ children }) => {
   const params = getParams(state)
 
   useEffect(() => {
+    const { parameters: defaults } = initialState
     const oscillator1 = new Tone.PolySynth()
     const oscillator2 = new Tone.PolySynth()
 
-    oscillator1.set({ 'oscillator': { 'type': params.osc1_type } })
-    oscillator2.set({ 'oscillator': { 'type': params.osc2_type } })
+    oscillator1.set({ 'oscillator': { 'type': defaults.osc1_type } })
+    oscillator2.set({ 'oscillator': { 'type': defaults.osc2_type } })
 
     const merge = new Tone.Merge()
     oscillator1.connect(merge)
     oscillator2.connect(merge)
 
-    const distortion = new Tone.Distortion(params.dist_amt)
-    const delay = new Tone.PingPongDelay(
-      params.delay_time,
-      params.delay_feed
-    )
-    const volume = new Tone.Volume(params.master_vol)
+    const filter = new Tone.Filter(defaults.flt_cut, defaults.flt_type, -24)
+
+    const distortion = new Tone.Distortion(defaults.dist_amt)
+    const delay = new Tone.FeedbackDelay(defaults.delay_time, defaults.delay_feed)
+    const volume = new Tone.Volume(defaults.master_vol)
 
     distortion.set({ 'oversample': '4x' })
-    delay.set({ 'wet': params.delay_wet })
+    delay.set({ 'wet': defaults.delay_wet })
 
     const analyzer = new Tone.Analyser('fft', 128)
 
-    merge.chain(distortion, delay, analyzer, volume, Tone.Destination)
+    merge.chain(filter, distortion, delay, analyzer, volume, Tone.Destination)
 
-    dispatch({ type: 'init_engine', engine: { oscillator1, oscillator2, volume, distortion, delay, analyzer } })
+    dispatch({
+      type: 'init_engine',
+      engine: {
+        oscillator1,
+        oscillator2,
+        filter: {
+          unit: filter
+        },
+        volume,
+        distortion,
+        delay,
+        analyzer
+      }
+    })
   }, [])
 
   useEffect(() => {
