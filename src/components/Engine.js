@@ -2,7 +2,7 @@ import * as Tone from 'tone'
 import styled from 'styled-components'
 import React, { createContext, useReducer, useEffect } from 'react'
 import { propEq, map, filter, both } from 'ramda'
-import { getParams, initialState, reducer } from '../state'
+import { FLT_FREQ_MAX, FLT_FREQ_MIN, getParams, initialState, reducer } from '../state'
 
 export const SynthInstrumentContext = createContext([initialState, () => null])
 
@@ -15,26 +15,25 @@ export const Engine = ({ children }) => {
     const { parameters: defaults } = initialState
     const oscillator1 = new Tone.PolySynth()
     const oscillator2 = new Tone.PolySynth()
-
-    oscillator1.set({ 'oscillator': { 'type': defaults.osc1_type } })
-    oscillator2.set({ 'oscillator': { 'type': defaults.osc2_type } })
-
-    const merge = new Tone.Merge()
-    oscillator1.connect(merge)
-    oscillator2.connect(merge)
-
-    const filter = new Tone.Filter(defaults.flt_cut, defaults.flt_type, -24)
-
+    const filter = new Tone.Filter(defaults.flt_freq, defaults.flt_type, -24)
+    const filterEnvelope = new Tone.Envelope();
+    const filterFreqScale = new Tone.Scale(FLT_FREQ_MIN, FLT_FREQ_MAX);
     const distortion = new Tone.Distortion(defaults.dist_amt)
     const delay = new Tone.FeedbackDelay(defaults.delay_time, defaults.delay_feed)
     const volume = new Tone.Volume(defaults.master_vol)
+    const analyzer = new Tone.Analyser('fft', 128)
 
+    oscillator1.set({ 'oscillator': { 'type': defaults.osc1_type } })
+    oscillator2.set({ 'oscillator': { 'type': defaults.osc2_type } })
     distortion.set({ 'oversample': '4x' })
     delay.set({ 'wet': defaults.delay_wet })
 
-    const analyzer = new Tone.Analyser('fft', 128)
+    filterEnvelope.connect(filterFreqScale)
+    filterFreqScale.connect(filter.frequency)
+    oscillator1.connect(filter)
+    oscillator2.connect(filter)
 
-    merge.chain(filter, distortion, delay, analyzer, volume, Tone.Destination)
+    filter.chain(distortion, delay, analyzer, volume, Tone.Destination)
 
     dispatch({
       type: 'init_engine',
@@ -42,7 +41,9 @@ export const Engine = ({ children }) => {
         oscillator1,
         oscillator2,
         filter: {
-          unit: filter
+          unit: filter,
+          scale: filterFreqScale,
+          envelope: filterEnvelope,
         },
         volume,
         distortion,
@@ -69,8 +70,11 @@ export const Engine = ({ children }) => {
 
     engine.oscillator1.triggerAttack(parseFrequencies(toPlays))
     engine.oscillator2.triggerAttack(parseFrequencies(toPlays))
+    engine.filter.envelope.triggerAttack()
+
     engine.oscillator1.triggerRelease(parseFrequencies(toRelease))
     engine.oscillator2.triggerRelease(parseFrequencies(toRelease))
+    engine.filter.envelope.triggerRelease()
 
     map(({ note }) => dispatch({ type: 'note_triggered', note }))(toPlays)
   }, [state.notes, dispatch, engine, initialized])
@@ -123,9 +127,46 @@ export const Engine = ({ children }) => {
       return
     }
 
+    engine.filter.envelope.set({
+      'attack': params.flt_env_atk,
+      'decay': params.flt_env_dec,
+      'sustain': params.flt_env_sus,
+      'release': params.flt_env_rel
+    })
+
+  }, [params.flt_env_atk, params.flt_env_dec, params.flt_env_sus, params.flt_env_rel, engine, initialized])
+
+  useEffect(() => {
+    if (!initialized) {
+      return
+    }
+
     engine.oscillator1.set({ 'oscillator': { 'type': params.osc1_type } })
     engine.oscillator2.set({ 'oscillator': { 'type': params.osc2_type } })
   }, [params.osc1_type, params.osc2_type, engine, initialized])
+
+  useEffect(() => {
+    if (!initialized) {
+      return
+    }
+
+    engine.filter.unit.set({ 'type': params.flt_type })
+  }, [params.flt_type, params.flt_freq, params.flt_res, engine, initialized])
+
+  useEffect(() => {
+    if (!initialized) {
+      return
+    }
+
+    if (params.flt_env_mix > 0) {
+      engine.filter.scale.min = params.flt_freq;
+      engine.filter.scale.max = params.flt_freq + (FLT_FREQ_MAX - params.flt_freq) * params.flt_env_mix;
+    } else {
+      engine.filter.scale.min = FLT_FREQ_MIN + (params.flt_freq - FLT_FREQ_MIN) * (1 - Math.abs(params.flt_env_mix))
+      engine.filter.scale.max = params.flt_freq;
+    }
+
+  }, [params.flt_env_mix, params.flt_freq, engine, initialized])
 
   useEffect(() => {
     if (!initialized) {

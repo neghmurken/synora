@@ -4,8 +4,8 @@ import { Selector } from './ui/Selector'
 
 export const FiltertypeSelector = ({ ...attrs }) => {
   const types = {
-    'highpass': 'HP',
     'lowpass': 'LP',
+    'highpass': 'HP',
     'bandpass': 'BP',
     'notch': 'NT',
   }

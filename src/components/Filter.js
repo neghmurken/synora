@@ -9,7 +9,8 @@ export const Filter = () => {
     <p>Filter</p>
     <FiltertypeSelector className="type" />
     <div>
-      <ParamKnob paramName="flt_cut" label="CUT" min="20" max="19000"/>
+      <ParamKnob paramName="flt_env_mix" label="ENV" min="-100" max="100" factor="100" />
+      <ParamKnob paramName="flt_freq" label="FREQ" min="20" max="16000"/>
       <ParamKnob paramName="flt_res" label="RES" min="0" max="100" factor="100"/>
     </div>
     <ADSR paramPrefix="flt" />

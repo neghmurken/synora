@@ -1,5 +1,8 @@
 import { append, assoc, compose, find, ifElse, map, propEq, when } from 'ramda'
 
+export const FLT_FREQ_MIN = 20
+export const FLT_FREQ_MAX = 16000
+
 export const initialState = {
   notes: [],
   initialized: false,
@@ -38,19 +41,20 @@ export const initialState = {
     osc2_env_sus: 1, // [0;1] unitless
     osc2_env_rel: 0.01, // [0;1] sec
 
-    flt_type: 'highpass', // {highpass,lowpass,bandpass,notch}
-    flt_cut: 20, // [20;19000] Hz
+    flt_type: 'lowpass', // {highpass,lowpass,bandpass,notch}
+    flt_freq: FLT_FREQ_MAX, // [20;16000] Hz
     flt_res: 0, // [0;1] unitless
+    flt_env_mix: 0, // [-1;1] unitless
     flt_env_atk: 0, // [0;1] sec
     flt_env_dec: 0, // [0;1] sec
     flt_env_sus: 1, // [0;1] unitless
     flt_env_rel: 0, // [0;1] sec
 
-    dist_amt: 0, // [0;1] unitless
-
     delay_wet: 0, // [0;1] unitless
     delay_time: 0, // [O;10] sec
     delay_feed: 0.5, // [O;1] unitless
+
+    dist_amt: 0, // [0;1] unitless
   },
   analyzer: {
     values: [],

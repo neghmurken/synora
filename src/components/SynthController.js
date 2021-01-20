@@ -5,42 +5,42 @@ import { SynthInstrumentContext } from './Engine'
 import styled from 'styled-components'
 
 export const SynthController = ({ displayControls = true }) => {
-  const [ state, dispatch ] = useContext(SynthInstrumentContext)
+  const [state, dispatch] = useContext(SynthInstrumentContext)
 
   useEffect(() => {
     if (!navigator.requestMIDIAccess) {
       return console.error('No midi access')
     }
 
-    navigator.requestMIDIAccess({
-        sysex: false // this defaults to 'false' and we won't be covering sysex in this article.
-    })
-    .then((midiAcess) => {
-      const inputs = midiAcess.inputs
+    navigator
+      .requestMIDIAccess()
+      .then((midiAcess) => {
+        const inputs = midiAcess.inputs
 
-      inputs.forEach(input => {
-        input.onmidimessage = (message) => {
-          if (!message.data) {
-            return;
+        inputs.forEach(input => {
+          input.onmidimessage = (message) => {
+            if (!message.data) {
+              return
+            }
+
+            const [type, note] = message.data
+
+            switch (type) {
+              case 159:
+                dispatch({ type: 'note_pressed', note: note })
+                break
+
+              case 143:
+                dispatch({ type: 'note_released', note: note })
+                break
+
+              default:
+                break
+            }
           }
-
-          const [ type, note ] = message.data
-
-          if (217 === type) {
-            return;
-          }
-
-          if (137 === type) {
-            dispatch({ type: 'note_released', note: note })
-
-            return;
-          }
-
-          dispatch({ type: 'note_pressed', note: note })
-        };
+        })
       })
-    })
-    .catch(console.error)
+      .catch(console.error)
   }, [dispatch])
 
   return !displayControls
@@ -50,7 +50,7 @@ export const SynthController = ({ displayControls = true }) => {
         Played notes :
         {map(({ note, isPlaying }) =>
           isPlaying && <span key={note}> {Tone.Midi(note).toNote()}</span>
-        ) (state.notes)}
+        )(state.notes)}
       </Info>
     )
 }
